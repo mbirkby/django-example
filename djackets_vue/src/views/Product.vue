@@ -13,15 +13,17 @@
         <div class="column is-3">
             <h2 class="subtitle">Information</h2>
             <p><strong>Price:</strong>£ {{product.price}}</p>
-        </div>
-        <div class="field has-addons mt-6">
-            <div class="control">
-                <input type="number" class="input" min="1" v-model="quantity">
+
+            <div class="field has-addons mt-6">
+                <div class="control">
+                    <input type="number" class="input" min="1" v-model="quantity">
+                </div>
+                <div class="control">
+                    <a class="button is-dark">Add to cart</a>
+                </div>
             </div>
-            <div class="control">
-                <a class="button is-dark">Add to cart</a>
-            </div>
         </div>
+        
 
     </div>
 </div>
