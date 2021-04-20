@@ -48,6 +48,8 @@ export default {
 
   mounted() {
     this.getLatestProducts()
+
+    document.title = 'Home | DJackets'
   },
 
   methods: {
