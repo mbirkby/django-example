@@ -46,13 +46,12 @@ export default {
             const categorySlug = this.$route.params.category_slug
             
             this.$store.commit('setIsLoading', true)
-            console.log("getCategory()")
+            
             await axios
                 .get(`/api/v1/products/${categorySlug}/`)
                 .then( response=> {
                     this.category = response.data
                     document.title = this.category.name+' | DJackets'
-                    console.log("Loaded "+categorySlug)
                 })
                 .catch(error=> {
                     console.log(error)
