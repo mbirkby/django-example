@@ -163,13 +163,6 @@ LOGGING = {
     },
  
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': './logs/log_file1.log',
-            'formatter':'verbose',
-        },
- 
         'console': {
             'level':'DEBUG',
             'class': 'logging.StreamHandler',
@@ -181,14 +174,5 @@ LOGGING = {
         'level': 'DEBUG',
     },
  
-    'loggers': {
-        'orders': {
-            'handlers': ['file', 'console'],
-            'level': 'DEBUG',
-        },
-        'products': {
-            'handlers': ['file', 'console'],
-            'level': 'DEBUG',
-        },
-    },
+    
 }

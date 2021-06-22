@@ -13,19 +13,12 @@ from rest_framework.response import Response
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
 
-import logging
-
-logger = logging.getLogger('orders')
-
-
-
 
 # Create your views here.
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def checkout(request):
-    logger.debug('Checkout '+__name__)
     serializer = OrderSerializer(data=request.data)
 
     if serializer.is_valid():
