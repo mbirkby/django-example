@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STRIPE_SECRET_KEY='sk_test_etc'
+
 
 # Application definition
 
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'djoser',
 
     'product',
+    'order',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -136,3 +139,56 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGGING = {
+    'version': 1,
+    # Version of logging
+    'disable_existing_loggers': False,
+ 
+    'filters':{
+        #information regarding filters
+    },
+ 
+    'formatters':{
+        'simple':{
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format':'{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style':'{',
+        },
+
+    },
+ 
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': './logs/log_file1.log',
+            'formatter':'verbose',
+        },
+ 
+        'console': {
+            'level':'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter':'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+ 
+    'loggers': {
+        'orders': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+        },
+        'products': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+        },
+    },
+}

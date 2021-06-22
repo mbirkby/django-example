@@ -86,17 +86,17 @@
                 </div>
                 <div class="notification is-danger" v-if="errors.length">
                         <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-                    </div>
+                </div>
 
-                    <hr>
+                <hr>
 
-                    <div id="card-element" class="mb-5"></div>
+                <div id="card-element" class="mb-5"></div>
 
-                    <template v-if="cartTotalLength">
-                        <hr>
-                        <button @click="submitForm" class="button is-dark">Pay with stripe</button>
-                    </template>
-
+                <template v-if="cartTotalLength">
+                     <hr>
+                     <button @click="submitForm" class="button is-dark">Pay with stripe</button>
+                </template>
+                
             </div>
         </div>
     </div>
@@ -129,12 +129,22 @@ export default {
         document.title = 'Checkout | DJackets'
 
         this.cart = this.$store.state.cart
+
+        if (this.cartTotalLength > 0) {
+            this.stripe = Stripe('pk_goes_here')
+            const elements = this.stripe.elements();
+
+            this.card = elements.create('card', { hidePostalCode: true})
+
+            this.card.mount('#card-element')
+        }
     },
     methods: {
         getItemTotal(item) {
             return item.quantity * item.product.price
         },
         submitForm() {
+            console.log('submitting form')
             this.errors=[]
             if (this.first_name === '') {
                 this.errors.push('The first name field is empty')
@@ -163,6 +173,75 @@ export default {
             if (this.place === '') {
                 this.errors.push('The place field is empty')
             }
+
+            if (!this.errors.length) {
+                this.$store.commit('setIsLoading', true)
+
+                
+
+                
+                
+                var result = {
+                    token : {id:1},
+                }
+
+                
+
+                /*this.stripe.createToken(this.card).then(result => {
+                    if (result.error) {
+                        this.$store.commit('setIsLoading', false)
+                        this.errors.push('Something went wrong with stripe.  Please try again')
+                        console.log(result.error.message)
+                    }
+                    else {
+                        this.stripeTokenHandler(result.token)
+                    }
+                })*/
+                
+                
+                
+                this.stripeTokenHandler(result.token)
+            }
+        },
+
+        async stripeTokenHandler(token){
+            const items = []
+           
+            for (let i = 0; i < this.cart.items.length; i++) {
+
+                const item = this.cart.items[i]
+                const obj = {
+                    product: item.product.id,
+                    quantity: item.quantity,
+                    price: item.product.price * item.quantity
+                }
+                items.push(obj)
+            }
+
+            const data = {
+                'first_name': this.first_name,
+                'last_name': this.last_name,
+                'email': this.email,
+                'address': this.address,
+                'zipcode': this.zipcode,
+                'place': this.place,
+                'phone': this.phone,
+                'items': items,
+                'stripe_token': token.id
+            }
+
+            await axios
+                .post('/api/v1/checkout/', data)
+                .then(response => {
+                    this.$store.commit('clearCart')
+                    this.$router.push('/cart/success')
+                })
+                .catch(error => {
+                    this.errors.push('Something went wrong. Please try again')
+                    console.log(error)
+                })
+
+                this.$store.commit('setIsLoading', false)
         }
     },
     computed : {
